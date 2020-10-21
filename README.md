@@ -11,7 +11,7 @@ Approximating pi using several monte carlo methods. (First time using Rust)
   
 ## Motivation
 I wanted to see if there was a language that was as powerful as C++ but handles memory more safely and had abstractions that didn't compromise performance. 
-That's where I turned to Rust. I wanted my first project in Rust to be something basic because this language is new to me and has a lot of 
+That's where I turned to Rust. I wanted my first project in Rust to be something basic because this language is new to me and has some
 new paradigms to programming such as its ownership feature.
 
 ## What is this project about?
