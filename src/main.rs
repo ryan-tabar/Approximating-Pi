@@ -7,17 +7,20 @@ fn main() {
     let total_iterations: u64 = 1_000_000;
     println!("circle to square ratio: pi = {}", circle_inside_square(total_iterations));
     println!("buffons needle: pi = {}", buffons_needle(total_iterations));
-    println!("random walk: pi = {}", random_walk(1000, 10_000));
+
+    let steps: u64 = 100;
+    let walks: u64 = 10_000;
+    println!("random walk: pi = {}", random_walk(steps, walks));
 }
 
 fn circle_inside_square(iterations: u64) -> f64 {
     // 1. Have a circle enclosed by a square with sides equal to the diameter of the circle
     // 2. Generate a random set of points on the square
-    // 3. Area of the circle is pi*r^2 = pi/4 with r = 0.5
+    // 3. Area of the circle is pi * r^2 with r = 0.5
     // 4. Area of square = 1 x 1
     // 5. Divide area of circle by square we get pi / 4
-    // 6. pi/4 ~ Ncircle/Ntotal
-    // 7. pi ~ 4*Ncircle/Ntotal
+    // 6. pi / 4 ~ Ncircle / Ntotal
+    // 7. pi ~ 4 * Ncircle / Ntotal
 
     let radius = 1_f64;
     let mut inside_counter = 0_f64;
