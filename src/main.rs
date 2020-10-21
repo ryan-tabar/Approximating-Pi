@@ -7,7 +7,7 @@ fn main() {
     let total_iterations: u64 = 1_000_000;
     println!("circle to square ratio: pi = {}", circle_inside_square(total_iterations));
     println!("buffons needle: pi = {}", buffons_needle(total_iterations));
-    println!("random walk: pi = {}", )
+    println!("random walk: pi = {}", random_walk(1000, 10_000));
 }
 
 fn circle_inside_square(iterations: u64) -> f64 {
@@ -52,6 +52,7 @@ fn buffons_needle(iterations: u64) -> f64 {
 
     let mut rng = rand::thread_rng();
     for _ in 0..iterations {
+        // Only care about the x position since the y position doesn't affect the outcome
         let needle_start_x = rng.gen_range(0_f64, parallel_width);
 
         let angle = rng.gen_range(0_f64, two_pi);
@@ -66,6 +67,38 @@ fn buffons_needle(iterations: u64) -> f64 {
     (2_f64 * (iterations as f64) * needle_length) / (cross_counter * parallel_width) 
 }
 
-fn random_walk(steps: u64, walks: u64) {
+fn random_walk(steps: u64, walks: u64) -> f64 {
+    // 1. Start a walk at position 0
+    // 2. Generate a number between 0 and 1
+    // 3. If number is less than 0.5, move position of x in the positive direction
+    // 4. Else move it in the negative direction
+    // 5. Calculate absolute distance from origin
+    // 6. Do this step number of times and cumulatively add the absolute distance
+    // 7. Do this walk number of times
+    // 8. Average the number of absolute distances
+    // 9. pi ~ 2 * steps / average_distance^2 
+
+    let mut sum_of_abs_distances = 0_f64;
+
+    let mut rng = rand::thread_rng();
+    for _ in 0..walks {
+        let mut position = 0_f64;
+        for _ in 0..steps {
+            let flip = rng.gen_range(0_f64, 1_f64);
     
+            if flip < 0.5f64 {
+                position += 1_f64;
+            } else {
+                position -= 1_f64;
+            }
+        }
+        // Distance from origin
+        let abs_distance = position.abs();
+        sum_of_abs_distances += abs_distance;
+    }
+
+    let average_sum_of_abs_distances = sum_of_abs_distances / (walks as f64);
+
+    // pi = 2 * n / (d_avg^2)
+    (2_f64 * (steps as f64)) / (average_sum_of_abs_distances.powf(2_f64))
 }
