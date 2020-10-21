@@ -4,9 +4,10 @@ Approximating pi using several monte carlo methods. (First time using Rust)
 ## How to run
   1. Make sure Rust is installed from https://www.rust-lang.org/tools/install
   2. Clone the repository
-  3. Go to the directory of the cloned repository
-  4. Type: cargo run
-  5. Output should be displayed in terminal
+  3. Open a terminal
+  4. Go to the directory of the cloned repository
+  5. Type: cargo run
+  6. Output should be displayed in terminal
   
 ## Motivation
 I wanted to see if there was a language that was as powerful as C++ but handles memory more safely and had abstractions that didn't compromise performance. 
