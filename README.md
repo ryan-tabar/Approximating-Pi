@@ -14,7 +14,7 @@ That's where I turned to Rust. I wanted my first project in Rust to be something
 new paradigms to programming such as its ownership feature.
 
 ## What is this project about?
-It approximates pi using three Monte Carlo methods. A Monte Carlo method are computational algorithms that rely on repeated random sampling to obtain numerical results.
+It approximates pi using three Monte Carlo methods. Monte Carlo methods are computational algorithms that rely on repeated random sampling to obtain numerical results.
 
 The first method makes use of a circle inside a square with sides equal to the diameter of the circle. The ratio between the area of the circle and the area of the square is pi / 4.
 By applying a random set of points to the square. One can approximate pi by the ratio of points landed inside the circle to the total number of points.
