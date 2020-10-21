@@ -1,0 +1,10 @@
+[package]
+name = "approximating-pi"
+version = "0.1.0"
+authors = ["Ryan Tabar <70136507+SirFourier@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rand = "0.7"
