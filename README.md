@@ -17,7 +17,7 @@ new paradigms to programming such as its ownership feature.
 It approximates pi using three Monte Carlo methods. Monte Carlo methods are computational algorithms that rely on repeated random sampling to obtain numerical results.
 
 The first method makes use of a circle inside a square with sides equal to the diameter of the circle. The ratio between the area of the circle and the area of the square is pi / 4.
-By applying a random set of points to the square. One can approximate pi by the ratio of points landed inside the circle to the total number of points.
+By applying a random set of points to the square, one can approximate pi by the ratio of points landed inside the circle to the total number of points.
 
 The second method is known as Buffon's needle. Take a set of parallel lines and drop needles on it.
 pi is approximatly equal to (2 * n * l / x * t). Where n = number of times droped, l = length of needle, t = distance between lines, and x = number of needles crossed a line.
