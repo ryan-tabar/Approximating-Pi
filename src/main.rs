@@ -3,43 +3,130 @@
 // The Rng trait defines methods that random number generates implement
 use rand::Rng;
 
-fn main() {
-    let total_iterations: u64 = 1_000_000;
-    println!("circle to square ratio: pi = {}", circle_inside_square(total_iterations));
-    println!("buffons needle: pi = {}", buffons_needle(total_iterations));
+// Piston engine for points inside circle approximaiton
+use piston_window::*;
+// Need image to save previous frame and loaded onto next frame
+use ::image;
+// For loading font to display pi
+use ::find_folder;
 
+fn main() {
     let steps: u64 = 100;
     let walks: u64 = 10_000;
     println!("random walk: pi = {}", random_walk(steps, walks));
+    
+    let total_iterations: u64 = 1_000_000;
+    println!("buffons needle: pi = {}", buffons_needle(total_iterations));
+
+    // This one has visuals using piston_window library
+    // pi approximation is printed on the console
+    circle_inside_square();
 }
 
-fn circle_inside_square(iterations: u64) -> f64 {
-    // 1. Have a circle enclosed by a square with sides equal to the diameter of the circle
-    // 2. Generate a random set of points on the square
-    // 3. Area of the circle is pi * r^2 with r = 0.5
-    // 4. Area of square = 1 x 1
-    // 5. Divide area of circle by square we get pi / 4
-    // 6. pi / 4 ~ Ncircle / Ntotal
-    // 7. pi ~ 4 * Ncircle / Ntotal
+fn circle_inside_square() {
+     // Display circle inside square pi approximation
+     const WIDTH: u32 = 512;
+     const HEIGHT: u32 = 540;
+     const TEXT_HEIGHT: u32 = 28;
+ 
+     let mut window: PistonWindow = WindowSettings::new("Approximating Pi", [WIDTH, HEIGHT])
+             .exit_on_esc(true).build().unwrap();
+ 
+     const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
+ 
+     // Create an image buffer to save previous frame and draw it again on next frame
+     let mut canvas = image::ImageBuffer::new(WIDTH, HEIGHT);
+     let mut texture_context = TextureContext {
+         factory: window.factory.clone(),
+         encoder: window.factory.create_command_buffer().into()
+     };
+     let mut texture: G2dTexture = Texture::from_image(
+         &mut texture_context,
+         &canvas,
+         &TextureSettings::new()
+     ).unwrap();
 
-    let radius = 1_f64;
-    let mut inside_counter = 0_f64;
-    
-    // Get seed for random number generation
-    let mut rng = rand::thread_rng();
-    for _ in 0..iterations {
-        // Treat 0, 0 as the center so boundaries of positions x and y are +- the radius
-        let pos_x = rng.gen_range(-radius, radius);
-        let pos_y = rng.gen_range(-radius, radius);
-        
-        // If Euclidean distance is less than the radius than it's inside the circle
-        if f64::sqrt(pos_x.powf(2_f64) + pos_y.powf(2_f64)) < radius {
-            inside_counter += 1_f64;
-        }
+    // Set up font for text to show pi
+    let assets = find_folder::Search::ParentsThenKids(3, 3)
+    .for_folder("assets").unwrap();
+    println!("{:?}", assets);
+    let mut glyphs = window.load_font(assets.join("FiraSans-Regular.ttf")).unwrap();
+ 
+     // Monte carlo method for random points inside a circle:
+     // 1. Have a circle enclosed by a square with sides equal to the diameter of the circle
+     // 2. Generate a random set of points on the square
+     // 3. Area of the circle is pi * r^2 with r = 0.5
+     // 4. Area of square = 1 x 1
+     // 5. Divide area of circle by square we get pi / 4
+     // 6. pi / 4 ~ Ncircle / Ntotal
+     // 7. pi ~ 4 * Ncircle / Ntotal
+ 
+     // Counter for number of points in circle and total counter
+     let mut inside_counter = 0_f64;
+     let mut total_counter = 0_f64;
+     
+     println!("Displaying visuals for random points inside circle...");
+     let mut rng = rand::thread_rng();
+     while let Some(e) = window.next() {
+        window.draw_2d(&e, |c, g, device| {
+            // Clear display to white
+            clear([1.0; 4], g);
+            
+            let rect = [0.0, 0.0, WIDTH as f64, (HEIGHT-TEXT_HEIGHT) as f64];
+            ellipse(GREEN, rect, c.transform, g);
+            
+            
+            let pos_x = rng.gen_range(0, WIDTH);
+            let pos_y = rng.gen_range(0, HEIGHT-TEXT_HEIGHT);
+            
+            // Put generated square pixels into canvas
+            for i in 0..5 {
+                if pos_x + i < WIDTH {
+                    for j in 0..5 {
+                        if pos_y + j < HEIGHT-TEXT_HEIGHT {
+                            canvas.put_pixel(pos_x + i, pos_y + j, image::Rgba([255, 0, 0, 255]));
+                        }
+                    }
+                }
+            }
+
+            // Map pos_x and pos_y between -1 and 1 (circle of radius 1 with center [0, 0])
+            let point_x = map(pos_x as f64, 0.0, WIDTH as f64, -1.0, 1.0);
+            let point_y = map(pos_y as f64, 0.0, (HEIGHT-TEXT_HEIGHT) as f64, -1.0, 1.0);
+            
+            // If Euclidean distance is less than the radius than it's inside the circle
+            let square_of_radius = 1; // square of 1 is 1
+            if point_x.powf(2_f64) + point_y.powf(2_f64) < square_of_radius as f64 {
+                inside_counter += 1_f64;
+            }
+            total_counter += 1_f64;
+            
+            // Update texture
+            texture.update(&mut texture_context, &canvas).unwrap();
+            image(&texture, c.transform, g);
+            texture_context.encoder.flush(device);
+
+            // Draw text for pi approximation
+            let transform = c.transform.trans(10.0, 535.0);
+
+            text::Text::new_color([0.0, 0.0, 1.0, 1.0], 28).draw(
+                &format!("{}", (4_f64 * inside_counter) / (total_counter as f64)).to_string(),
+                &mut glyphs,
+                &c.draw_state,
+                transform, g
+            ).unwrap();
+
+            // Update glyphs before rendering.
+            glyphs.factory.encoder.flush(device);
+        });
     }
+}
 
-    // Return approximation to pi 
-    (4_f64 * inside_counter) / (iterations as f64)
+fn map(val: f64, min: f64, max: f64, new_min: f64, new_max: f64) -> f64 {
+    // Map val to new val based on new range
+    let range = max - min;
+    let new_range = new_max - new_min;
+    (val / range) * new_range + new_min
 }
 
 fn buffons_needle(iterations: u64) -> f64 {
@@ -75,8 +162,8 @@ fn random_walk(steps: u64, walks: u64) -> f64 {
     // 2. Generate a number between 0 and 1
     // 3. If number is less than 0.5, move position of x in the positive direction
     // 4. Else move it in the negative direction
-    // 5. Calculate absolute distance from origin
-    // 6. Do this step number of times and cumulatively add the absolute distance
+    // 5. Do this step number of times
+    // 6. Calculate absolute distance from origin and sum it cumulatively
     // 7. Do this walk number of times
     // 8. Average the number of absolute distances
     // 9. pi ~ 2 * steps / average_distance^2 
