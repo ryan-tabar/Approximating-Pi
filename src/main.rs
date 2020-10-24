@@ -7,7 +7,7 @@ use rand::Rng;
 use piston_window::*;
 // Need image to save previous frame and loaded onto next frame
 use ::image;
-// For loading font to display pi
+// For loading font to display digits of pi
 use ::find_folder;
 
 fn main() {
@@ -24,50 +24,50 @@ fn main() {
 }
 
 fn circle_inside_square() {
-     // Display circle inside square pi approximation
-     const WIDTH: u32 = 512;
-     const HEIGHT: u32 = 540;
-     const TEXT_HEIGHT: u32 = 28;
- 
-     let mut window: PistonWindow = WindowSettings::new("Approximating Pi", [WIDTH, HEIGHT])
-             .exit_on_esc(true).build().unwrap();
- 
-     const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
- 
-     // Create an image buffer to save previous frame and draw it again on next frame
-     let mut canvas = image::ImageBuffer::new(WIDTH, HEIGHT);
-     let mut texture_context = TextureContext {
-         factory: window.factory.clone(),
-         encoder: window.factory.create_command_buffer().into()
-     };
-     let mut texture: G2dTexture = Texture::from_image(
-         &mut texture_context,
-         &canvas,
-         &TextureSettings::new()
-     ).unwrap();
+    // Display circle inside square pi approximation
+    const WIDTH: u32 = 512;
+    const HEIGHT: u32 = 540;
+    const TEXT_HEIGHT: u32 = 28;
+
+    let mut window: PistonWindow = WindowSettings::new("Approximating Pi", [WIDTH, HEIGHT])
+            .exit_on_esc(true).build().unwrap();
+
+    const GREEN: [f32; 4] = [0.0, 1.0, 0.0, 1.0];
+
+    // Create an image buffer to save previous frame and draw it again on next frame
+    let mut canvas = image::ImageBuffer::new(WIDTH, HEIGHT);
+    let mut texture_context = TextureContext {
+        factory: window.factory.clone(),
+        encoder: window.factory.create_command_buffer().into()
+    };
+    let mut texture: G2dTexture = Texture::from_image(
+        &mut texture_context,
+        &canvas,
+        &TextureSettings::new()
+    ).unwrap();
 
     // Set up font for text to show pi
     let assets = find_folder::Search::ParentsThenKids(3, 3)
     .for_folder("assets").unwrap();
     println!("{:?}", assets);
     let mut glyphs = window.load_font(assets.join("FiraSans-Regular.ttf")).unwrap();
- 
-     // Monte carlo method for random points inside a circle:
-     // 1. Have a circle enclosed by a square with sides equal to the diameter of the circle
-     // 2. Generate a random set of points on the square
-     // 3. Area of the circle is pi * r^2 with r = 0.5
-     // 4. Area of square = 1 x 1
-     // 5. Divide area of circle by square we get pi / 4
-     // 6. pi / 4 ~ Ncircle / Ntotal
-     // 7. pi ~ 4 * Ncircle / Ntotal
- 
-     // Counter for number of points in circle and total counter
-     let mut inside_counter = 0_f64;
-     let mut total_counter = 0_f64;
-     
-     println!("Displaying visuals for random points inside circle...");
-     let mut rng = rand::thread_rng();
-     while let Some(e) = window.next() {
+
+    // Monte carlo method for random points inside a circle:
+    // 1. Have a circle enclosed by a square with sides equal to the diameter of the circle
+    // 2. Generate a random set of points on the square
+    // 3. Area of the circle is pi * r^2 with r = 0.5
+    // 4. Area of square = 1 x 1
+    // 5. Divide area of circle by square we get pi / 4
+    // 6. pi / 4 ~ Ncircle / Ntotal
+    // 7. pi ~ 4 * Ncircle / Ntotal
+
+    // Counter for number of points in circle and total counter
+    let mut inside_counter = 0_f64;
+    let mut total_counter = 0_f64;
+    
+    println!("Displaying visuals for random points inside circle...");
+    let mut rng = rand::thread_rng();
+    while let Some(e) = window.next() {
         window.draw_2d(&e, |c, g, device| {
             // Clear display to white
             clear([1.0; 4], g);
