@@ -9,6 +9,7 @@ Approximating pi using several monte carlo methods. (First time using Rust)
   3. Open a terminal
   4. Go to the directory of the cloned repository
   5. Type: cargo run
+  6. Wait for dependencies to be downloaded
   6. Output should be displayed in terminal
   
 ## Motivation
@@ -16,11 +17,11 @@ I wanted to see if there was a language that was as powerful as C++ but handles 
 That's where I turned to Rust. I wanted my first project in Rust to be something basic because this language is new to me and has some
 new paradigms to programming such as its ownership feature.
 
-## What is this project about?
+## About
 It approximates pi using three Monte Carlo methods. Monte Carlo methods are computational algorithms that rely on repeated random sampling to obtain numerical results.
 
 The first method makes use of a circle inside a square with sides equal to the diameter of the circle. The ratio between the area of the circle and the area of the square is pi / 4.
-By applying a random set of points to the square, one can approximate pi by the ratio of points landed inside the circle to the total number of points.
+By applying a random set of points to the square, one can approximate pi by the ratio of points landed inside the circle to the total number of points. This method is visualised while the other two aren't.
 
 The second method is known as Buffon's needle. Take a set of parallel lines and drop needles on it.
 pi is approximatly equal to (2 * n * l / x * t). Where n = number of times droped, l = length of needle, t = distance between lines, and x = number of needles crossed a line.
@@ -30,4 +31,4 @@ Do this steps number of times. Calculate the absolute distance from the origin a
 Average the number of absolute distances. pi is approximatly equal to 2 * steps / average_distance^2.
 
 ## Possible improvements
-- Add some visualisations (possibly using SDL2 bindings for Rust)
+- Add visuals for the other two methods
