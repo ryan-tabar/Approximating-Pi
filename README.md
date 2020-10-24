@@ -1,5 +1,5 @@
 # Approximating-Pi
-Approximating pi using several monte carlo methods. (First time using Rust)
+Approximating pi using monte carlo methods. (First time using Rust)
 
 ![gif_for_pi_visuals](assets/PiVisuals.gif?raw=true)
 
