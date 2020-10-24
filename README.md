@@ -10,7 +10,7 @@ Approximating pi using several monte carlo methods. (First time using Rust)
   4. Go to the directory of the cloned repository
   5. Type: cargo run
   6. Wait for dependencies to be downloaded
-  6. None-visual outputs are displayed in the terminal while the random points in a circle is visualised
+  6. Non-visual outputs are displayed in the terminal while the random points in a circle is visualised
   
 ## Motivation
 I wanted to see if there was a language that was as powerful as C++ but handles memory more safely and had abstractions that didn't compromise performance. 
