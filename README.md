@@ -1,6 +1,8 @@
 # Approximating-Pi
 Approximating pi using several monte carlo methods. (First time using Rust)
 
+![gif_for_pi_visuals](assets/PiVisuals.gif?raw=true)
+
 ## How to run
   1. Make sure Rust is installed from https://www.rust-lang.org/tools/install
   2. Clone the repository
